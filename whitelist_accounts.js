@@ -17,3 +17,8 @@ const generateProof = function(accountAddress) {
     console.log('proof is' + proof)
     return merkleTree.getHexRoot(proof)
 }
+
+module.exports = [
+    amIOnTheWhilist,
+    generateProof
+]
