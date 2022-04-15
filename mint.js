@@ -28,10 +28,9 @@ async function connectMetamask() {
     console.log('connectMetamask block')
     mintButtonLoading.classList.remove('hidden')
 
-
     const {ethereum} = window;
 
-    if (!ethereum) {
+    if (!ethereum || ethereum.isMetaMask) {
         alert("Please, install Metamask.");
         return;
     } else {
