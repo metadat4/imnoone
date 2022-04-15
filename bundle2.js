@@ -4,11 +4,11 @@ var whitelistAddresses = ["0xf436BBc0733840dAfe4d5fE4858f5864A31DB1EC", "0x14Ffa
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
 
-function amIOnTheWhilist(accountAddress) {
+const amIOnTheWhilist = function(accountAddress) {
     whitelistAddresses.includes(accountAddress);
 }
 
-function generateProof(accountAddress) {
+const generateProof = function(accountAddress) {
     const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
     const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true });
 
