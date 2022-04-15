@@ -18,10 +18,13 @@ const web3 = new Web3(Web3.givenProvider);
 const contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
 
 async function refreshUI() {
-    const accounts = window.ethereum.accounts
-    if (accounts.length > 0) {
-        metamaskButtonText.textContent = "Connected"
-    }
+
+    console.log(`KEVIN = ${window.ethereum}`)
+
+    // const accounts = window.ethereum.accounts
+    // if (accounts.length > 0) {
+    //     metamaskButtonText.textContent = "Connected"
+    // }
 }
 
 async function connectMetamask() {
