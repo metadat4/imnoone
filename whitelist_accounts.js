@@ -18,7 +18,5 @@ const generateProof = function(accountAddress) {
     return merkleTree.getHexRoot(proof)
 }
 
-module.exports = [
-    amIOnTheWhilist,
-    generateProof
-]
+global.window.amIOnTheWhilist = amIOnTheWhilist;
+global.window.generateProof = generateProof;
