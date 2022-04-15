@@ -1,0 +1,173 @@
+<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/metadat4/imnoone/ABI.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/metadat4/imnoone/whitelist_accounts.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/gh/metadat4/imnoone/mint.js"></script>-->
+<script>
+    const CONTRACT_ADDRESS = "0x2370e2Fc16840b88c8860Ee0F53726CB2905bEC8"; //address for your smart contract
+    const WHITELIST_MINT_PRICE_IN_WEI = 40000000000000000; // 0.04 eth
+    const PUBLIC_MINT_PRICE_IN_WEI = 50000000000000000; // 0.05 eth
+
+    const CHAIN_ID = '0x4'; //'0x4' for Rinkeby an '0x1' for Ethereum
+    const CHAIN_ID_NAME = 'Ethereum'; //enter name of blockchain used
+
+    const mintButton = document.querySelector("#mint-button");
+    const mintButtonLoading = document.querySelector("#mint-button-loading");
+    const metamaskButton = document.querySelector("#metamask-button");
+    const metamaskButtonText = document.querySelector("#metamask-button-text");
+
+    // const mintErrorMessage = document.querySelector("#mint-error-message");
+    // const mintSuccessMessage = document.querySelector("#mint-success-message");
+    // const mintedCountText = document.querySelector("#minted-count-text");
+    // const metamaskButtonLoading = document.querySelector("#metamask-button-loading");
+
+    // Web3 Setup
+    const web3 = new Web3(Web3.givenProvider);
+
+    const contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
+
+    function hasMetamask() {
+        return window.ethereum && window.ethereum.isMetaMask
+    }
+
+    function isConnected() {
+        return window.ethereum.isConnected()
+    }
+
+    async function refreshUI() {
+        if (hasMetamask() || isConnected()) {
+            metamaskButtonText.textContent = "Connected"
+        } else {
+            metamaskButtonText.textContent = "Connect Metamask"
+        }
+    }
+
+    async function connectMetamask() {
+        console.log('connectMetamask block')
+        mintButtonLoading.classList.remove('hidden')
+
+        if (hasMetamask()) {
+            const accounts = await window.ethereum.request({
+                method: "eth_requestAccounts",
+            });
+
+            await refreshUI()
+        } else {
+            alert("Please, install Metamask.");
+        }
+
+        mintButtonLoading.classList.add('hidden')
+    }
+
+    refreshUI()
+
+    metamaskButton.addEventListener("click", function (e) {
+        console.log('metamaskButton event click handler')
+        // prevent default action
+        e.preventDefault();
+        connectMetamask()
+    });
+
+    const quantitySlider = document.querySelector("#quantity-slider")
+    function getQuantity() {
+        for (let i = 0; i < quantitySlider.children.length; i++) {
+            const child = quantitySlider.children[i]
+            if (!child.hasAttribute('aria-hidden')) {
+                return Number(child.innerText)
+            }
+        }
+    }
+
+
+    // Mint Function
+    const mintWhitelist = async function (amount) {
+        const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+        });
+
+        if (accounts.length === 0) {
+            console.log('please accept transaction on metamask')
+            return;
+        }
+
+        if (!amIOnTheWhilist(accounts[0])) {
+            alert('Not on the wishlist')
+            return
+        }
+
+        const proof = generateProof(accounts[0])
+
+        const totalCost = WHITELIST_MINT_PRICE_IN_WEI * amount;
+        contract.methods.mintWhitelist(amount, proof).send({
+            from: accounts[0],
+            to: CONTRACT_ADDRESS,
+            value: String(totalCost),
+        });
+    }
+
+    // On button click
+    mintButton.addEventListener("click", function (e) {
+        // prevent default action
+        e.preventDefault();
+        // Alert if input is empty
+
+        mintWhitelist(getQuantity())
+
+        // messageText.innerText = "Please accept in Metamask!";
+    })
+
+    // const updateChainId = async function () {
+    //     const id = await ethereum.request({method: 'eth_chainId'});
+    //     console.log('id from async func is: ' + id);
+    //
+    //     if (id == CHAIN_ID) {
+    //         console.log('chain is' + CHAIN_ID_NAME);
+    //         messageText.innerText = "👍 You are connected to " + CHAIN_ID_NAME;
+    //         mintForm.classList.remove("disabled");
+    //     } else {
+    //         console.log('chain is not ' + CHAIN_ID_NAME);
+    //         messageText.innerText = "Please switch to " + CHAIN_ID_NAME;
+    //         mintForm.classList.add("disabled");
+    //     }
+    //     return id;
+    // }
+    //
+    // // If Metamask is installed, hide 'Get metamask' button
+    // if (window.ethereum) {
+    //     hasWallet.classList.remove("hidden");
+    //     hasNoWallet.classList.add("hidden");
+    //     updateChainId();
+    // }
+    //
+
+
+    //update totalSupply
+    // contract.methods.totalSupply().call().then((supply) => numMinted.innerText = supply);
+    // contract.methods.maxSupply().call().then((max) => maxSupply.innerText = max);
+
+    // Event Listeners
+    // ethereum.on('chainChanged', handleChainChanged);
+
+    // function handleChainChanged(_chainId) {
+    //     window.location.reload();
+    // }
+
+
+    // TODO: 1. Whitelist mint
+    // - Connect metamask
+    // - Metamask connected
+
+
+    // CONNECT WALLET
+    // LOADING??
+    // WALLET CONNECTED
+
+    // MINT BUTTON
+    //// CONNECT WALLET
+    //// DO TRANSACTION
+    //// LOADING
+    //// TRANSACTIONS SUBMITTED
+
+    // AUTO SWITCH TO ETHEREUM?
+
+</script>
+
