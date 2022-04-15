@@ -10,12 +10,7 @@ const amIOnTheWhilist = function(accountAddress) {
 const generateProof = function(accountAddress) {
     const leafNodes = whitelistAddresses.map(addr => addr.toLowerCase()).map(addr => keccak256(addr))
     const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true });
-
-
-    const proof = merkleTree.getHexProof(keccak256(accountAddress));
-
-    console.log('proof is' + proof)
-    return merkleTree.getHexRoot(proof)
+    return merkleTree.getHexProof(keccak256(accountAddress));
 }
 
 global.window.amIOnTheWhilist = amIOnTheWhilist;

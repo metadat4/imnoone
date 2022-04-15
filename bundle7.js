@@ -12,16 +12,12 @@
             const generateProof = function(accountAddress) {
                 const leafNodes = whitelistAddresses.map(addr => addr.toLowerCase()).map(addr => keccak256(addr))
                 const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true });
-
-
-                const proof = merkleTree.getHexProof(keccak256(accountAddress));
-
-                console.log('proof is' + proof)
-                return merkleTree.getHexRoot(proof)
+                return merkleTree.getHexProof(keccak256(accountAddress));
             }
 
             global.window.amIOnTheWhilist = amIOnTheWhilist;
             global.window.generateProof = generateProof;
+
         }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
     },{"keccak256":45,"merkletreejs":49}],2:[function(require,module,exports){
         (function (module, exports) {
