@@ -4,11 +4,11 @@ const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
 
 const amIOnTheWhilist = function(accountAddress) {
-    return whitelistAddresses.includes(accountAddress);
+    return whitelistAddresses.map(addr => addr.toLowerCase()).includes(accountAddress.toLowerCase());
 }
 
 const generateProof = function(accountAddress) {
-    const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
+    const leafNodes = whitelistAddresses.map(addr => addr.toLowerCase()).map(addr => keccak256(addr))
     const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true });
 
 
