@@ -6,7 +6,7 @@
             const keccak256 = require('keccak256');
 
             const amIOnTheWhilist = function(accountAddress) {
-                whitelistAddresses.includes(accountAddress);
+                return whitelistAddresses.includes(accountAddress);
             }
 
             const generateProof = function(accountAddress) {
