@@ -17,33 +17,34 @@ const web3 = new Web3(Web3.givenProvider);
 
 const contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
 
+function hasMetamask() {
+    return window.ethereum && window.ethereum.isMetaMask
+}
+function isConnected() {
+    return window.ethereum.isConnected()
+}
+
 async function refreshUI() {
-
-    console.log(`KEVIN = ${window.ethereum}`)
-
-    // const accounts = window.ethereum.accounts
-    // if (accounts.length > 0) {
-    //     metamaskButtonText.textContent = "Connected"
-    // }
+    if (hasMetamask() || isConnected()) {
+        metamaskButtonText.textContent = "Connected"
+    } else {
+        metamaskButtonText.textContent = "Connect Metamask"
+    }
 }
 
 async function connectMetamask() {
     console.log('connectMetamask block')
     mintButtonLoading.classList.remove('hidden')
 
-    const {ethereum} = window;
-
-    if (!ethereum || ethereum.isMetaMask) {
-        alert("Please, install Metamask.");
-        return;
-    } else {
+    if (hasMetamask()) {
         const accounts = await window.ethereum.request({
             method: "eth_requestAccounts",
         });
 
         await refreshUI()
+    } else {
+        alert("Please, install Metamask.");
     }
-
 
     mintButtonLoading.classList.add('hidden')
 }
